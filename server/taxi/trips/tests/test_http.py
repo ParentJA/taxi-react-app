@@ -99,3 +99,11 @@ class HttpTripTest(APITestCase):
         response = self.client.get(trip.get_absolute_url())
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(str(trip.id), response.data.get('id'))
+
+    def test_user_can_rate_trip(self):
+        trip = Trip.objects.create(
+            pick_up_address='A', drop_off_address='B', rider=self.user)
+        response = self.client.patch(reverse('trip:trip_rating', kwargs={'trip_id': trip.id}), data={'rating_by_rider': 4})
+        trip.refresh_from_db()
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(trip.rating_by_rider, response.data['rating_by_rider'])
