@@ -33,7 +33,7 @@ function Map (props) {
         mapContainerStyle={{
           width: '100%',
           height: '300px',
-          'margin-bottom': '10px'
+          marginBottom: '10px'
         }}
         zoom={props.zoom}
       >

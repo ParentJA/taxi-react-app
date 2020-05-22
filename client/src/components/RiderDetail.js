@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Breadcrumb, Card, Col, Row
-} from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap';
+import { Col, Row } from 'react-bootstrap'
 
 import TripMedia from './TripMedia';
 import { getTrip } from '../services/TripService';
@@ -38,16 +35,10 @@ function RiderDetail ({ match }) {
   return (
     <Row>
       <Col lg={12}>
-        <Breadcrumb>
-          <LinkContainer to='/rider'>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active>Trip</Breadcrumb.Item>
-        </Breadcrumb>
-        <Card className='mb-3' data-cy='trip-card'>
-          <Card.Header>Trip</Card.Header>
-          <Card.Body>{tripMedia}</Card.Body>
-        </Card>
+        <div className='mb-3' data-cy='trip-card'>
+          <h1>Trip</h1>
+          {tripMedia}
+        </div>
       </Col>
     </Row>
   );

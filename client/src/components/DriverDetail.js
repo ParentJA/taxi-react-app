@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Breadcrumb, Button, Card, Col, Row
-} from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { webSocket } from 'rxjs/webSocket';
 
 import TripMedia from './TripMedia';
@@ -57,12 +54,6 @@ function DriverDetail ({ match }) {
   return (
     <Row>
       <Col lg={12}>
-        <Breadcrumb>
-          <LinkContainer to='/driver'>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active>Trip</Breadcrumb.Item>
-        </Breadcrumb>
         <Card className='mb-3' data-cy='trip-card'>
           <Card.Header>Trip</Card.Header>
           <Card.Body>{tripMedia}</Card.Body>

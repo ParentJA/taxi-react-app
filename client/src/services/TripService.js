@@ -25,3 +25,22 @@ export const getTrips = async () => {
     return { response, isError: true };
   }
 };
+
+export const setRating = async (id, rating) => {
+  const url = `/api/trip/${id}/ratings/`;
+  const token = getAccessToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  try {
+    const response = await axios.request({
+      url,
+      method: 'patch',
+      headers,
+      data: {
+        rating_by_rider: rating
+      }
+    });
+    return { response, isError: false };
+  } catch (response) {
+    return { response, isError: true };
+  }
+};

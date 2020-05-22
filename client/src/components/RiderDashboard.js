@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Breadcrumb, Col, Row
-} from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { webSocket } from 'rxjs/webSocket';
 
@@ -10,6 +9,7 @@ import { getAccessToken } from '../services/AuthService';
 import { getTrips } from '../services/TripService';
 
 function RiderDashboard (props) {
+  const [trip, setTrip] = useState(undefined);
   const [trips, setTrips] = useState([]);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function RiderDashboard (props) {
         message.data
       ]);
       updateToast(message.data);
+      setTrip(message.data);
     });
     return () => {
       subscription.unsubscribe();
@@ -65,28 +66,32 @@ function RiderDashboard (props) {
     }
   };
 
+  if (trip && trip.status === 'COMPLETED') {
+    return <Redirect to={{
+      pathname: `/rider/${trip.id}/rating`,
+      state: {
+        trip: trip,
+        user: trip.driver
+      }
+    }} />;
+  }
+
   return (
     <Row>
       <Col lg={12}>
-        <Breadcrumb>
-          <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
-          <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
-        </Breadcrumb>
-
+        <h1>Trips</h1>
         <TripCard
           title='Current Trip'
           trips={getCurrentTrips()}
           group='rider'
           otherGroup='driver'
         />
-
         <TripCard
           title='Recent Trips'
           trips={getCompletedTrips()}
           group='rider'
           otherGroup='driver'
         />
-
       </Col>
     </Row>
   );

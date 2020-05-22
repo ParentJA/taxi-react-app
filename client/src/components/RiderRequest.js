@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
-import {
-  Breadcrumb, Button, Card, Col, Form, Row
-} from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
 import { webSocket } from 'rxjs/webSocket';
 
 import Map from './Map';
@@ -48,68 +45,57 @@ function RiderRequest (props) {
   return (
     <Row>
       <Col lg={12}>
-        <Breadcrumb>
-          <LinkContainer to='/rider'>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active>Request</Breadcrumb.Item>
-        </Breadcrumb>
-        <Card className='mb-3'>
-          <Card.Header>Request Trip</Card.Header>
-          <Card.Body>
-            <Formik
-              initialValues={{
-                pickUpAddress: '',
-                dropOffAddress: ''
-              }}
-              onSubmit={onSubmit}
-            >
-              {({
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                values
-              }) => (
-                <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group controlId='pickUpAddress'>
-                      <Form.Label>Pick up address:</Form.Label>
-                      <Form.Control
-                        data-cy='pick-up-address'
-                        name='pickUpAddress'
-                        onChange={handleChange}
-                        values={values.pickUpAddress}
-                        required
-                      />
-                    </Form.Group>
-                    {/* new */}
-                    <Map
-                      lat={lat}
-                      lng={lng}
-                      zoom={13}
-                      pickUpAddress={values.pickUpAddress}
-                      dropOffAddress={values.dropOffAddress}
-                    />
-                    <Form.Group controlId='dropOffAddress'>
-                      <Form.Label>Drop off address:</Form.Label>
-                      <Form.Control
-                        data-cy='drop-off-address'
-                        name='dropOffAddress'
-                        onChange={handleChange}
-                        values={values.dropOffAddress}
-                      />
-                    </Form.Group>
-                    <Button
-                      block
-                      data-cy='submit'
-                      disabled={isSubmitting}
-                      type='submit'
-                      variant='primary'
-                    >Submit</Button>
-                  </Form>
-                )}
-            </Formik>
-          </Card.Body>
-        </Card>
+        <h1>Request trip</h1>
+        <Formik
+          initialValues={{
+            pickUpAddress: '',
+            dropOffAddress: ''
+          }}
+          onSubmit={onSubmit}
+        >
+          {({
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            values
+          }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Group controlId='pickUpAddress'>
+                <Form.Label>Pick up address:</Form.Label>
+                <Form.Control
+                  data-cy='pick-up-address'
+                  name='pickUpAddress'
+                  onChange={handleChange}
+                  values={values.pickUpAddress}
+                  required
+                />
+              </Form.Group>
+              <Map
+                lat={lat}
+                lng={lng}
+                zoom={13}
+                pickUpAddress={values.pickUpAddress}
+                dropOffAddress={values.dropOffAddress}
+              />
+              <Form.Group controlId='dropOffAddress'>
+                <Form.Label>Drop off address:</Form.Label>
+                <Form.Control
+                  data-cy='drop-off-address'
+                  name='dropOffAddress'
+                  onChange={handleChange}
+                  values={values.dropOffAddress}
+                />
+              </Form.Group>
+              <Button
+                block
+                data-cy='submit'
+                disabled={isSubmitting}
+                type='submit'
+                variant='primary'
+              >Submit</Button>
+            </Form>
+          )}
+        </Formik>
       </Col>
     </Row>
   )

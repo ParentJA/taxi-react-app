@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import { isDriver, isRider } from './services/AuthService';
+import { getUser, isDriver, isRider } from './services/AuthService';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import Driver from './components/Driver';
+import DriverDropdown from './components/DriverDropdown';
+import DriverRoute from './components/DriverRoute';
 import Rider from './components/Rider';
+import RiderDropdown from './components/RiderDropdown';
+import RiderRoute from './components/RiderRoute';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 function App () {
-  const [isLoggedIn, setLoggedIn] = useState(() => {
-    return window.localStorage.getItem('taxi.auth') !== null;
-  });
+  const [user, setUser] = useState(() => getUser());
   
   const logIn = async (username, password) => {
     const url = '/api/log_in/';
@@ -26,7 +28,7 @@ function App () {
       window.localStorage.setItem(
         'taxi.auth', JSON.stringify(response.data)
       );
-      setLoggedIn(true);
+      setUser(getUser());
       return { response, isError: false };
     }
     catch (error) {
@@ -37,7 +39,7 @@ function App () {
 
   const logOut = () => {
     window.localStorage.removeItem('taxi.auth');
-    setLoggedIn(false);
+    setUser(undefined);
   };
 
   return (
@@ -47,88 +49,29 @@ function App () {
           <Navbar.Brand className='logo'>Taxi</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle />
-          <Navbar.Collapse>
-            {
-              isRider() && (
-                <Nav className='mr-auto'>
-                  <LinkContainer to='/rider/request'>
-                    <Nav.Link>Request a trip</Nav.Link>
-                  </LinkContainer>
-                </Nav>
-              )
-            }
-            {
-              isLoggedIn && (
-                <Form inline className='ml-auto'>
-                  <Button
-                    type='button'
-                    onClick={() => logOut()}
-                  >Log out</Button>
-                </Form>
-              )
-            }
-          </Navbar.Collapse>
+        {isDriver() && <DriverDropdown logOut={logOut} user={user} />}
+        {isRider() && <RiderDropdown logOut={logOut} user={user} />}
       </Navbar>
       <Container className='pt-3'>
-        <Switch>
-          <Route exact path='/' render={() => (
-            <div className='middle-center'>
-              <h1 className='landing logo'>Taxi</h1>
-              {
-                !isLoggedIn && (
-                  <>
-                    <Link
-                      id='signUp'
-                      className='btn btn-primary'
-                      to='/sign-up'
-                    >Sign up</Link>
-                    <Link
-                      id='logIn'
-                      className='btn btn-primary'
-                      to='/log-in'
-                    >Log in</Link>
-                  </>
-                )
-              }
-              {
-                isRider() && (
-                  <Link
-                    className='btn btn-primary'
-                    to='/rider'
-                  >Dashboard</Link>
-                )
-              }
-              {
-                isDriver() && (
-                  <Link
-                    className='btn btn-primary'
-                    to='/driver'
-                  >Dashboard</Link>
-                )
-              }
-            </div>
-          )} />
-          <Route path='/sign-up' render={() => (
-            isLoggedIn ? (
-              <Redirect to='/' />
-            ) : (
-              <SignUp />
-            )
-          )} />
-          <Route path='/log-in' render={() => (
-            isLoggedIn ? (
-              <Redirect to='/' />
-            ) : (
+        {isDriver() ? (
+          <Switch>
+            <DriverRoute path='/driver' component={Driver} />
+            <Route path='/log-in'>
               <LogIn logIn={logIn} />
-            )
-          )} />
-          <Route path='/driver' render={() => (
-            <Driver />
-          )} />
-          <Route path='/rider' render={() => (
-            <Rider />
-          )} />
-        </Switch>
+            </Route>
+            <Route path='/sign-up' component={SignUp} />
+            <Redirect from='/' to='/driver' />
+          </Switch>
+        ) : (
+          <Switch>
+            <RiderRoute path='/rider' component={Rider} />
+            <Route path='/log-in'>
+              <LogIn logIn={logIn} />
+            </Route>
+            <Route path='/sign-up' component={SignUp} />
+            <Redirect from='/' to='/rider' />
+          </Switch>
+        )}
       </Container>
       <ToastContainer />
     </>

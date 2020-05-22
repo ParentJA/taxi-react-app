@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Breadcrumb, Col, Row
-} from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { webSocket } from 'rxjs/webSocket';
 
@@ -66,32 +64,25 @@ function DriverDashboard (props) {
   return (
     <Row>
       <Col lg={12}>
-        <Breadcrumb>
-          <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
-          <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
-        </Breadcrumb>
-
+        <h1>Trips</h1>
         <TripCard
           title='Current Trip'
           trips={getCurrentTrips()}
           group='driver'
           otherGroup='rider'
         />
-
         <TripCard
           title='Requested Trips'
           trips={getRequestedTrips()}
           group='driver'
           otherGroup='rider'
         />
-
         <TripCard
           title='Recent Trips'
           trips={getCompletedTrips()}
           group='driver'
           otherGroup='rider'
         />
-
       </Col>
     </Row>
   );
